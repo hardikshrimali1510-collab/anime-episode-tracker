@@ -1,0 +1,125 @@
+#!/bin/bash
+# lib/functions.sh – all functions for Anime Episode Tracker
+DATA="data/anime.csv"
+
+LOG="logs/activity.log"
+
+# write one line to the activity log
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') | $*" >> "$LOG"
+}
+
+# check the data file / folder exists before using it
+check_data() {
+    if [ ! -e "$DATA" ]; then
+        echo "Data not found: $DATA"
+        return 1
+    fi
+}
+
+show_help() {
+    echo "Usage: ./main.sh            -> open the menu"
+    echo "       ./main.sh --help     -> show this help"
+    echo "       ./main.sh --backup   -> backup data/ now"
+    echo "       ./main.sh --cron     -> run the scheduled (crontab) task"
+}
+
+view_data() {
+    check_data || return
+    if [ -d "$DATA" ]; then ls -l "$DATA"; else cat -n "$DATA" | more; fi
+}
+
+do_backup() {
+    f="backups/data_$(date +%Y%m%d_%H%M%S).tar.gz"
+    tar -czf "$f" data/
+    echo "Backup saved: $f ($(du -h "$f" | cut -f1))"
+    log "backup created $f"
+}
+
+view_log() {
+    if [ -f "$LOG" ]; then tail -n 15 "$LOG"; else echo "No activity yet."; fi
+}
+
+# ------------------------------------------------------------
+# FEATURE 1: Update episodes watched
+# Commands you can use: printf, bc, awk, sed, sort
+# ------------------------------------------------------------
+feature_1() {
+    echo "== Update episodes watched =="
+    echo "TODO: write the code for this feature (see your project guide, Step 3)."
+    # ---- example to start from (remove the # and change it) ----
+    # read -p "Enter title to change: " key
+    # if ! grep -q "^$key," "$DATA"; then echo "Not found"; return; fi
+    # # change the last column of that row (example)
+    # sed -i "/^$key,/s/[^,]*$/NEW_VALUE/" "$DATA"
+    # echo "Updated:"; grep "^$key," "$DATA"
+    log "feature_1 used"
+}
+
+# ------------------------------------------------------------
+# FEATURE 2: Show % complete with a text progress bar (printf)
+# Commands you can use: printf, bc, awk, sed, sort
+# ------------------------------------------------------------
+feature_2() {
+    echo "== Show % complete with a text progress bar (printf) =="
+    echo "TODO: write the code for this feature (see your project guide, Step 4)."
+    # ---- example to start from (remove the # and change it) ----
+    # # example: total and average of column 2 (total_ep); change $2 if you need another column
+    # awk -F',' 'NR>1 { sum += $2; n++ }
+    # END { if (n>0) printf "Total: %.2f  Average: %.2f\n", sum, sum/n }' "$DATA"
+    # # for decimals in bash use bc, e.g.: echo "scale=2; 45/60" | bc
+    log "feature_2 used"
+}
+
+# ------------------------------------------------------------
+# FEATURE 3: List completed and dropped series
+# Commands you can use: printf, bc, awk, sed, sort
+# ------------------------------------------------------------
+feature_3() {
+    echo "== List completed and dropped series =="
+    echo "TODO: write the code for this feature (see your project guide, Step 5)."
+    # ---- example to start from (remove the # and change it) ----
+    # read -p "Search for: " word
+    # grep -i "$word" "$DATA" || echo "Nothing found"
+    # # or show selected columns: awk -F',' '{ print $1, $2 }' "$DATA"
+    log "feature_3 used"
+}
+
+# ------------------------------------------------------------
+# FEATURE 4: Estimate remaining binge time (24 min per episode, bc)
+# Commands you can use: printf, bc, awk, sed, sort
+# ------------------------------------------------------------
+feature_4() {
+    echo "== Estimate remaining binge time (24 min per episode, bc) =="
+    echo "TODO: write the code for this feature (see your project guide, Step 6)."
+    # ---- example to start from (remove the # and change it) ----
+    # # example: count rows per value of column 2
+    # tail -n +2 "$DATA" | cut -d',' -f2 | sort | uniq -c | sort -nr | head -5
+    # # example: top 5 rows by column 2 (total_ep)
+    # tail -n +2 "$DATA" | sort -t',' -k2 -nr | head -5
+    log "feature_4 used"
+}
+
+# ------------------------------------------------------------
+# FEATURE 5: Sort series by progress
+# Commands you can use: printf, bc, awk, sed, sort
+# ------------------------------------------------------------
+feature_5() {
+    echo "== Sort series by progress =="
+    echo "TODO: write the code for this feature (see your project guide, Step 7)."
+    # ---- example to start from (remove the # and change it) ----
+    # read -p "Search for: " word
+    # grep -i "$word" "$DATA" || echo "Nothing found"
+    # # or show selected columns: awk -F',' '{ print $1, $2 }' "$DATA"
+    log "feature_5 used"
+}
+
+# ------------------------------------------------------------
+# CRON TASK: Every day at 9 PM, append today's anime progress summary to progress.log
+# Runs when crontab calls:  ./main.sh --cron
+# ------------------------------------------------------------
+cron_task() {
+    # TODO: write the code for the scheduled task here (Step 10 of your guide)
+    echo "$(date '+%Y-%m-%d %H:%M') cron task ran" >> reports/cron_output.txt
+    log "cron task ran"
+}
